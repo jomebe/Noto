@@ -36,6 +36,10 @@
   color: var(--noto-ink);
 }
 
+a.noto-btn {
+  text-decoration: none;
+}
+
 .noto-nav__brand-text {
   text-transform: lowercase;
 }

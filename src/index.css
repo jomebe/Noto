@@ -26,6 +26,15 @@ body {
   min-height: 100svh;
 }
 
+.noto-route-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40svh;
+  font-family: var(--noto-font);
+  color: var(--noto-ink-muted);
+}
+
 a {
   color: inherit;
 }
