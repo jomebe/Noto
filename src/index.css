@@ -1,0 +1,35 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  font-family: var(--noto-font);
+  color: var(--noto-ink);
+  background: radial-gradient(
+      120% 80% at 50% -20%,
+      var(--noto-lavender) 0%,
+      var(--noto-surface) 55%
+    ),
+    var(--noto-surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+}
