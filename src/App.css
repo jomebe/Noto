@@ -2,6 +2,7 @@
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 var(--noto-gutter) 4rem;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .noto-nav {
@@ -15,6 +16,7 @@
   backdrop-filter: blur(14px);
   background: color-mix(in srgb, var(--noto-surface) 82%, transparent);
   border-bottom: 1px solid var(--noto-border);
+  animation: slideDown 0.4s ease-out;
 }
 
 .noto-nav__inner {
@@ -62,6 +64,17 @@ a.noto-btn {
   transition:
     color 0.2s,
     background 0.2s;
+  position: relative;
+}
+
+.noto-nav__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--noto-radius-pill);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
 }
 
 .noto-nav__link:hover {
@@ -90,10 +103,14 @@ a.noto-btn {
   font-weight: 600;
   cursor: pointer;
   transition:
-    transform 0.15s ease,
-    box-shadow 0.2s ease,
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease,
     background 0.2s ease,
     color 0.2s ease;
+}
+
+.noto-btn:hover {
+  transform: translateY(-2px);
 }
 
 .noto-btn:active {
@@ -138,6 +155,7 @@ a.noto-btn {
   position: relative;
   text-align: center;
   padding: var(--noto-section-y) 0 3rem;
+  animation: slideUp 0.8s ease-out;
 }
 
 .noto-hero__glow {
@@ -179,6 +197,7 @@ a.noto-btn {
   letter-spacing: -0.05em;
   line-height: 1.05;
   color: var(--noto-ink);
+  animation: slideUp 0.8s ease-out 0.1s both;
 }
 
 .noto-hero__title-accent {
@@ -190,6 +209,7 @@ a.noto-btn {
   font-size: clamp(1.05rem, 2.4vw, 1.25rem);
   font-weight: 500;
   color: var(--noto-ink-muted);
+  animation: slideUp 0.8s ease-out 0.15s both;
 }
 
 .noto-hero__slogan-em {
@@ -203,6 +223,7 @@ a.noto-btn {
   font-size: 1.05rem;
   line-height: 1.65;
   color: var(--noto-ink-muted);
+  animation: slideUp 0.8s ease-out 0.2s both;
 }
 
 .noto-hero__actions {
@@ -211,11 +232,15 @@ a.noto-btn {
   flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: center;
+  animation: slideUp 0.8s ease-out 0.25s both;
 }
 
 .noto-section {
   scroll-margin-top: 88px;
   padding: var(--noto-section-y) 0;
+  animation: slideUp 1s ease-out 0.1s both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
 }
 
 .noto-section__head h2 {
@@ -268,15 +293,18 @@ a.noto-btn {
   border: 1px solid var(--noto-border);
   box-shadow: 0 12px 32px color-mix(in srgb, var(--noto-ink) 5%, transparent);
   transition:
-    border-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.2s;
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideUp 0.8s ease-out;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
 }
 
 .noto-card:hover {
   border-color: color-mix(in srgb, var(--noto-primary) 35%, var(--noto-border));
   box-shadow: 0 18px 44px var(--noto-shadow);
-  transform: translateY(-2px);
+  transform: translateY(-6px);
 }
 
 .noto-card__tag {
@@ -321,6 +349,15 @@ a.noto-btn {
   padding: 1.25rem 1.35rem;
   background: var(--noto-surface);
   border: 1px solid var(--noto-border);
+  transition: all 0.3s ease;
+  animation: slideUp 0.8s ease-out;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+.noto-flow-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--noto-ink) 8%, transparent);
 }
 
 .noto-flow-card h3 {
@@ -474,6 +511,9 @@ a.noto-btn {
   padding-top: 2rem;
   border-top: 1px solid var(--noto-border);
   text-align: center;
+  animation: slideUp 0.8s ease-out;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
 }
 
 .noto-footer__brand {

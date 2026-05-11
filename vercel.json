@@ -1,0 +1,32 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "env": {
+    "VITE_OPENAI_API_KEY": {
+      "description": "OpenAI API Key for AI-powered insights",
+      "required": false
+    },
+    "VITE_OPENAI_MODEL": {
+      "description": "OpenAI model to use for generating insights",
+      "required": false,
+      "default": "gpt-4o-mini"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    }
+  ]
+}

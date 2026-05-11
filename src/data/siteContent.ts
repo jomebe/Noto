@@ -1,4 +1,4 @@
-export const siteContent = {
+﻿export const siteContent = {
   meta: {
     title: 'noto — AI Layered Note',
     description:
@@ -10,7 +10,6 @@ export const siteContent = {
       { id: 'concept', label: '컨셉' },
       { id: 'features', label: '기능' },
       { id: 'flow', label: '사용 흐름' },
-      { id: 'demo', label: '호버 데모' },
     ],
     cta: '시작하기',
   },
@@ -30,7 +29,6 @@ export const siteContent = {
     sub:
       'PDF 위에 직접 덧대지 않고, AI 마크와 호버 인사이트로 가독성과 깊이를 동시에 잡는 학습·발표 경험.',
     primaryCta: '제품 살펴보기',
-    secondaryCta: '호버 데모',
   },
   concept: {
     id: 'concept',
@@ -100,34 +98,6 @@ export const siteContent = {
       },
     ],
   },
-  hoverDemo: {
-    id: 'demo',
-    heading: '호버 인사이트 체험',
-    hint: '보라색 밑줄 구간에 마우스를 올려 보세요.',
-    docTitle: '강의 노트 · 샘플 페이지',
-    paragraphs: [
-      {
-        text: '이 구간은 강사가 교재에 없는 예시를 길게 설명했습니다.',
-        mark: {
-          label: 'AI 보충',
-          insight:
-            '실무에서는 캐시 무효화 전략으로 stale-while-revalidate 패턴을 자주 씁니다. 시험에서는 “일관성 vs 지연” 트레이드오프만 정리해도 만점 라인입니다.',
-        },
-      },
-      {
-        text: '정의는 교재 그대로이며 추가 설명이 거의 없었습니다.',
-        mark: null,
-      },
-      {
-        text: '여기서 “반드시 암기”라는 표현이 세 번 반복되었습니다.',
-        mark: {
-          label: '강조 감지',
-          insight:
-            '강사가 반복한 구간으로 자동 하이라이트 후보입니다. 별표 마크와 함께 복습 큐에 올라갑니다.',
-        },
-      },
-    ],
-  },
   footer: {
     line: 'noto — AI Layered Note',
     note: '브랜드와 UI는 제품 톤에 맞춰 지속적으로 다듬어집니다.',
@@ -135,5 +105,7 @@ export const siteContent = {
 } as const
 
 export type SiteContent = typeof siteContent
-export type HoverDemoSection = typeof siteContent.hoverDemo
-export type HoverDemoParagraph = HoverDemoSection['paragraphs'][number]
+export type HoverDemoSection = { id: string; heading: string; hint: string; docTitle: string; paragraphs: HoverDemoParagraph[] }
+export type HoverDemoParagraph = { text: string; mark: { label: string; insight: string } | null }
+
+

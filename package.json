@@ -1,14 +1,29 @@
 {
   "name": "noto-app",
+  "description": "AI Layered Note: Interactive note-taking solution with hover-based insights",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "keywords": [
+    "ai",
+    "note-taking",
+    "pdf",
+    "speech-recognition",
+    "hover-insights"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/Noto"
+  },
   "scripts": {
     "start": "vite",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "pdfjs-dist": "^5.7.284",

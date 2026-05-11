@@ -3,6 +3,7 @@
   padding: 0 var(--noto-gutter) 2rem;
   max-width: 1280px;
   margin: 0 auto;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .ws-nav {
@@ -138,6 +139,7 @@
   overflow: auto;
   max-height: min(72vh, 900px);
   box-shadow: 0 12px 36px color-mix(in srgb, var(--noto-ink) 6%, transparent);
+  animation: scaleIn 0.5s ease-out;
 }
 
 .ws-side {
@@ -152,6 +154,12 @@
   background: var(--noto-surface);
   padding: 1rem 1.1rem;
   box-shadow: 0 8px 24px color-mix(in srgb, var(--noto-ink) 4%, transparent);
+  animation: slideUp 0.5s ease-out;
+  transition: all 0.3s ease;
+}
+
+.ws-panel:hover {
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--noto-ink) 6%, transparent);
 }
 
 .ws-panel__title {
@@ -252,6 +260,16 @@
   color: var(--noto-primary-hover);
   background: color-mix(in srgb, var(--noto-primary) 22%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--noto-primary) 45%, transparent);
+  transition: all 0.2s ease;
+  animation: scaleIn 0.3s ease-out;
+}
+
+.pdf-mark:hover {
+  background: color-mix(in srgb, var(--noto-primary) 35%, transparent);
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--noto-primary) 60%, transparent),
+    0 0 12px color-mix(in srgb, var(--noto-primary) 40%, transparent);
+  transform: scale(1.1);
 }
 
 .pdf-mark--star {
@@ -270,6 +288,7 @@
   border: 1px solid color-mix(in srgb, var(--noto-primary) 30%, var(--noto-border));
   box-shadow: 0 16px 40px color-mix(in srgb, var(--noto-ink) 14%, transparent);
   pointer-events: none;
+  animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .pdf-insight--below {
@@ -285,4 +304,123 @@
   font-size: 0.84rem;
   line-height: 1.5;
   color: var(--noto-ink-muted);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .ws {
+    padding: 0 1rem 1rem;
+  }
+
+  .ws-nav {
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    margin-bottom: 1rem;
+  }
+
+  .ws-nav__title {
+    display: none;
+  }
+
+  .ws-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ws-scale input[type='range'] {
+    max-width: 150px;
+  }
+
+  .ws-canvas-wrap {
+    max-height: 50vh;
+    padding: 0.5rem;
+  }
+
+  .ws-panel {
+    padding: 0.75rem 0.9rem;
+  }
+
+  .ws-panel__title {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .ws-transcript {
+    max-height: 150px;
+    font-size: 0.8rem;
+  }
+
+  .ws-keywords,
+  .ws-bullets {
+    font-size: 0.8rem;
+    padding-left: 1rem;
+  }
+
+  .pdf-insight {
+    width: min(280px, calc(100vw - 16px));
+    font-size: 0.8rem;
+  }
+
+  .ws-toolbar {
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .ws-filename {
+    max-width: 150px;
+    font-size: 0.8rem;
+  }
+
+  .noto-btn {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ws {
+    padding: 0 0.75rem 0.75rem;
+  }
+
+  .ws-nav {
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .ws-layout {
+    gap: 0.75rem;
+  }
+
+  .ws-canvas-wrap {
+    max-height: 45vh;
+    padding: 0.4rem;
+  }
+
+  .ws-panel {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .ws-transcript {
+    max-height: 120px;
+    font-size: 0.75rem;
+  }
+
+  .pdf-insight {
+    width: min(260px, calc(100vw - 12px));
+    font-size: 0.75rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .ws-pagebar {
+    gap: 0.5rem;
+  }
+
+  .noto-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .ws-row {
+    gap: 0.4rem;
+  }
 }

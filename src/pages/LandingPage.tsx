@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { HoverPdfDemo } from '../components/HoverPdfDemo'
 import { NotoLogo } from '../components/NotoLogo'
 import { paths } from '../config/paths'
 import { siteContent } from '../data/siteContent'
@@ -18,7 +17,7 @@ export default function LandingPage() {
     if (meta) meta.setAttribute('content', siteContent.meta.description)
   }, [])
 
-  const { nav, hero, concept, features, presentationFlow, hoverDemo, footer } =
+  const { nav, hero, concept, features, presentationFlow, footer } =
     siteContent
 
   return (
@@ -80,13 +79,6 @@ export default function LandingPage() {
             >
               {hero.primaryCta}
             </Link>
-            <button
-              type="button"
-              className="noto-btn noto-btn--ghost noto-btn--lg"
-              onClick={() => scrollToId(hoverDemo.id)}
-            >
-              {hero.secondaryCta}
-            </button>
           </div>
         </section>
 
@@ -132,13 +124,6 @@ export default function LandingPage() {
               </article>
             ))}
           </div>
-        </section>
-
-        <section id={hoverDemo.id} className="noto-section noto-demo-wrap">
-          <div className="noto-section__head">
-            <h2>{hoverDemo.heading}</h2>
-          </div>
-          <HoverPdfDemo section={hoverDemo} />
         </section>
       </main>
 

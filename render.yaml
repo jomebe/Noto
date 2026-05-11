@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: noto-app
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm run preview
+    envVars:
+      - key: VITE_OPENAI_API_KEY
+        scope: run
+        isFile: false
+      - key: VITE_OPENAI_MODEL
+        value: gpt-4o-mini
+        scope: run

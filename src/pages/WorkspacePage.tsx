@@ -91,12 +91,32 @@ export default function WorkspacePage() {
       setNumPages(loaded.numPages)
       setCurrentPage(1)
       setPdfName(file.name)
-    } catch {
-      setPdfError('PDF를 불러오지 못했습니다.')
+    } catch (error) {
+      console.error('PDF 로드 실패:', error)
+      setPdfError('PDF를 불러오지 못했습니다. 파일이 올바른 형식인지 확인해주세요.')
       setDoc(null)
       setNumPages(0)
     } finally {
       setPdfLoading(false)
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.currentTarget.style.backgroundColor = 'rgba(99, 102, 241, 0.05)'
+  }
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.currentTarget.style.backgroundColor = 'transparent'
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.currentTarget.style.backgroundColor = 'transparent'
+    const files = e.dataTransfer.files
+    if (files.length > 0) {
+      void handleFile(files[0])
     }
   }
 
@@ -160,7 +180,21 @@ export default function WorkspacePage() {
           </div>
 
           {!doc ? (
-            <p className="ws-placeholder">{workspaceStrings.noPdf}</p>
+            <div
+              className="ws-placeholder"
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              style={{
+                cursor: 'pointer',
+                transition: 'background-color 0.2s',
+              }}
+            >
+              <p>{workspaceStrings.noPdf}</p>
+              <p style={{ fontSize: '0.85rem', marginTop: '0.5rem', opacity: 0.7 }}>
+                또는 PDF를 여기로 드래그하세요
+              </p>
+            </div>
           ) : (
             <>
               <div className="ws-pagebar">
