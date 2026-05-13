@@ -1,15 +1,25 @@
 # Noto
 
-수업 음성을 PDF 위의 하이라이트와 호버 요약으로 바꾸는 AI 노트 웹앱입니다.
+무료로 사용할 수 있는 PDF 수업 하이라이트 웹앱입니다. PDF를 올리고 수업 음성을 받으면 브라우저 안에서 자동 하이라이트와 호버 요약을 만듭니다.
+
+## 무료 모드
+
+Noto MVP는 기본적으로 API 키가 필요 없습니다.
+
+- PDF 렌더링: PDF.js
+- 음성 전사: 브라우저 Web Speech API
+- 중요/설명 하이라이트: 로컬 규칙 기반 분석
+- 호버 요약: PDF 문구와 전사 맥락을 이용한 로컬 요약
+- 배포: Vercel 정적 배포 가능
 
 ## 핵심 기능
 
-- PDF 업로드 및 PDF.js 기반 페이지 렌더링
-- 브라우저 마이크 전사(Web Speech API)
+- PDF 업로드 및 페이지 렌더링
+- 녹음 시작/종료와 실시간 전사
 - 전사 내용과 PDF 텍스트 매칭
 - 중요 표현/반복 언급 기반 노란 하이라이트
 - 보충 설명 후보 초록 하이라이트
-- 하이라이트 호버 시 AI 요약 팝업
+- 하이라이트 호버 시 무료 로컬 요약 팝업
 - 전사 텍스트 내보내기 및 세션 요약
 
 ## 빠른 시작
@@ -25,18 +35,7 @@ npm run dev
 
 ## 환경 변수
 
-호버 요약은 `/api/insight` 서버리스 함수에서 OpenAI API를 호출합니다. 키가 없으면 로컬 fallback 요약을 사용합니다.
-
-```bash
-cp .env.example .env.local
-```
-
-```env
-OPENAI_API_KEY=sk_your_key_here
-OPENAI_MODEL=gpt-4o-mini
-```
-
-Vercel 배포 시에도 같은 이름으로 Environment Variables에 등록합니다. OpenAI 키는 클라이언트 번들에 넣지 않습니다.
+필요 없습니다. `.env.example`은 무료 모드 안내용으로만 남겨두었습니다.
 
 ## 사용 흐름
 
@@ -55,13 +54,15 @@ npm run preview
 
 ## 배포
 
-- Frontend: Vercel
-- Serverless API: Vercel `/api/insight`
-- Required env for AI insights: `OPENAI_API_KEY`
-- Optional env: `OPENAI_MODEL`
+Vercel에 그대로 연결하면 됩니다.
+
+- Build command: `npm run build`
+- Output directory: `dist`
+- Environment variables: 없음
 
 ## 현재 MVP 한계
 
 - Web Speech API 지원 브라우저(Chrome/Edge)에 최적화되어 있습니다.
 - 텍스트 추출 가능한 PDF를 기준으로 동작합니다.
+- 로컬 요약은 LLM 품질이 아니라 규칙 기반 요약입니다.
 - 스캔 PDF OCR, 완전한 화자 분리, 장시간 백그라운드 녹음은 후속 범위입니다.

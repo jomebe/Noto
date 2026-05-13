@@ -1,32 +1,10 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "env": {
-    "OPENAI_API_KEY": {
-      "description": "Server-side OpenAI API key for hover insights",
-      "required": false
-    },
-    "OPENAI_MODEL": {
-      "description": "OpenAI model to use for generating insights",
-      "required": false,
-      "default": "gpt-4o-mini"
-    }
-  },
   "rewrites": [
     {
-      "source": "/((?!api/.*).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/:path*",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache"
-        }
-      ]
     }
   ]
 }

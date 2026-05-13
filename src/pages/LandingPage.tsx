@@ -87,13 +87,13 @@ export default function LandingPage() {
               </div>
               <aside className="noto-preview-side">
                 <div>
-                  <span className="noto-preview-label">LIVE</span>
+                  <span className="noto-preview-label">FREE</span>
                   <strong>녹음 중 12:48</strong>
                 </div>
                 <p>“이 개념은 시험에 자주 나오고, 쉽게 말하면 에너지 저장 방식입니다.”</p>
                 <ul>
                   <li>중요 하이라이트 8개</li>
-                  <li>호버 요약 5개</li>
+                  <li>무료 호버 요약 5개</li>
                 </ul>
               </aside>
             </div>

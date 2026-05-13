@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export type SttUiState = {
   supported: boolean
@@ -27,25 +27,47 @@ export function useSpeechRecognition(
   const [finalText, setFinalText] = useState('')
   const [error, setError] = useState<string | null>(null)
   const recRef = useRef<WebSpeechRecognition | null>(null)
+  const restartTimerRef = useRef<number | null>(null)
+  const shouldListenRef = useRef(false)
   const finalBufferRef = useRef('')
+  const langRef = useRef(lang)
+  const onFinalChunkRef = useRef(onFinalChunk)
+  const startRecognitionRef = useRef<() => void>(() => {})
+
+  useEffect(() => {
+    langRef.current = lang
+    onFinalChunkRef.current = onFinalChunk
+  }, [lang, onFinalChunk])
 
   const stop = useCallback(() => {
-    recRef.current?.stop()
+    shouldListenRef.current = false
+    if (restartTimerRef.current !== null) {
+      window.clearTimeout(restartTimerRef.current)
+      restartTimerRef.current = null
+    }
+    const rec = recRef.current
     recRef.current = null
+    try {
+      rec?.stop()
+    } catch {
+      /* already stopped */
+    }
     setListening(false)
     setInterim('')
   }, [])
 
-  const start = useCallback(() => {
+  const startRecognition = useCallback(() => {
     const Ctor = getRecognitionCtor()
     if (!Ctor) {
       setError('SpeechRecognition 미지원')
+      shouldListenRef.current = false
       return
     }
+    if (recRef.current) return
+
     setError(null)
-    stop()
     const rec = new Ctor()
-    rec.lang = lang
+    rec.lang = langRef.current
     rec.continuous = true
     rec.interimResults = true
     rec.maxAlternatives = 1
@@ -64,7 +86,7 @@ export function useSpeechRecognition(
         if (trimmed) {
           finalBufferRef.current = `${finalBufferRef.current} ${trimmed}`.trim()
           setFinalText(finalBufferRef.current)
-          onFinalChunk(trimmed)
+          onFinalChunkRef.current(trimmed)
         }
       }
 
@@ -80,13 +102,30 @@ export function useSpeechRecognition(
 
     rec.onerror = (ev: SpeechRecognitionErrorEvent) => {
       if (ev.error === 'aborted' || ev.error === 'no-speech') return
+      if (
+        ev.error === 'not-allowed' ||
+        ev.error === 'service-not-allowed' ||
+        ev.error === 'audio-capture'
+      ) {
+        shouldListenRef.current = false
+        setListening(false)
+      }
       setError(ev.error)
     }
 
     rec.onend = () => {
-      setListening(false)
       setInterim('')
       recRef.current = null
+      if (!shouldListenRef.current) {
+        setListening(false)
+        return
+      }
+      restartTimerRef.current = window.setTimeout(() => {
+        restartTimerRef.current = null
+        if (shouldListenRef.current) {
+          startRecognitionRef.current()
+        }
+      }, 250)
     }
 
     recRef.current = rec
@@ -94,9 +133,25 @@ export function useSpeechRecognition(
       rec.start()
       setListening(true)
     } catch {
+      shouldListenRef.current = false
+      recRef.current = null
+      setListening(false)
       setError('시작 실패')
     }
-  }, [lang, onFinalChunk, stop])
+  }, [])
+
+  useEffect(() => {
+    startRecognitionRef.current = startRecognition
+  }, [startRecognition])
+
+  const start = useCallback(() => {
+    shouldListenRef.current = true
+    if (restartTimerRef.current !== null) {
+      window.clearTimeout(restartTimerRef.current)
+      restartTimerRef.current = null
+    }
+    startRecognitionRef.current()
+  }, [])
 
   const resetTranscript = useCallback(() => {
     finalBufferRef.current = ''

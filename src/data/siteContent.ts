@@ -1,8 +1,8 @@
 export const siteContent = {
   meta: {
-    title: 'Noto — 수업 음성을 PDF 위의 필기로 바꾸는 AI 노트',
+    title: 'Noto — 무료로 쓰는 PDF 수업 하이라이트 노트',
     description:
-      'PDF를 업로드하고 수업 음성을 받으면, AI가 중요한 부분을 하이라이트하고 호버 요약을 제공합니다.',
+      'PDF를 업로드하고 수업 음성을 받으면, 브라우저 안에서 중요한 부분을 하이라이트하고 호버 요약을 제공합니다.',
   },
   nav: {
     brand: 'Noto',
@@ -14,18 +14,18 @@ export const siteContent = {
     cta: 'PDF로 시작',
   },
   hero: {
-    eyebrow: 'AI Lecture Notes on Your PDF',
-    title: '수업이 끝나면 PDF 위에 필기가 완성됩니다',
+    eyebrow: 'Free Browser-Based Lecture Notes',
+    title: '무료로, PDF 위에 수업 하이라이트를 남깁니다',
     sub:
-      '교재를 새 노트로 복사하지 않습니다. 수업 음성을 PDF 텍스트와 매칭해 중요한 개념은 하이라이트하고, 설명은 호버 요약으로 남깁니다.',
+      'OpenAI 키나 별도 서버 없이 시작할 수 있습니다. 브라우저 음성 전사와 로컬 규칙 기반 분석으로 중요한 개념은 하이라이트하고, 설명은 호버 요약으로 남깁니다.',
     primaryCta: '워크스페이스 열기',
     secondaryCta: '작동 방식 보기',
   },
   product: {
     id: 'product',
-    heading: '업로드, 녹음, 자동 하이라이트',
+    heading: '업로드, 녹음, 자동 하이라이트까지 무료 모드로 동작',
     body:
-      'Noto는 브라우저 안에서 PDF를 읽고 수업 전사를 분석합니다. 강조 표현과 반복 언급은 노란색, 보충 설명이 붙은 개념은 초록색으로 구분합니다.',
+      'Noto는 브라우저 안에서 PDF를 읽고 수업 전사를 분석합니다. 강조 표현과 반복 언급은 노란색, 보충 설명이 붙은 개념은 초록색으로 구분하며, 호버 요약도 로컬에서 생성합니다.',
   },
   features: {
     id: 'features',
@@ -48,8 +48,8 @@ export const siteContent = {
       },
       {
         title: '호버 요약',
-        desc: '하이라이트에 마우스를 올리면 해당 PDF 문구와 전사 맥락을 바탕으로 짧은 요약을 보여줍니다.',
-        tag: 'AI',
+        desc: '하이라이트에 마우스를 올리면 PDF 문구와 전사 맥락을 바탕으로 무료 로컬 요약을 보여줍니다.',
+        tag: 'Free',
       },
     ],
   },
@@ -73,7 +73,7 @@ export const siteContent = {
   },
   footer: {
     line: 'Noto — AI Lecture Notes on PDF',
-    note: '현재 MVP는 텍스트 추출 가능한 PDF와 Chrome/Edge 브라우저에 최적화되어 있습니다.',
+    note: '현재 MVP는 무료 모드 기준이며, 텍스트 추출 가능한 PDF와 Chrome/Edge 브라우저에 최적화되어 있습니다.',
   },
 } as const
 

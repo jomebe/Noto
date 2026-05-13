@@ -9,7 +9,7 @@ export const workspaceStrings = {
   listenStart: '녹음 시작',
   listenStop: '녹음 종료',
   sttUnsupported: '이 브라우저는 Web Speech API를 지원하지 않습니다. Chrome 또는 Edge를 사용해 주세요.',
-  sttHint: '마이크 권한을 허용하면 수업 음성이 전사되고 PDF 문구와 겹치는 핵심 개념에 자동 하이라이트가 생깁니다.',
+  sttHint: '무료 모드입니다. 마이크 권한을 허용하면 브라우저 전사와 로컬 분석으로 PDF 문구에 자동 하이라이트가 생깁니다.',
   transcriptHeading: '녹음 및 전사',
   clearTranscript: '초기화',
   summaryHeading: 'AI 요약',

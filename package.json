@@ -1,6 +1,6 @@
 {
   "name": "noto-app",
-  "description": "AI Layered Note: Interactive note-taking solution with hover-based insights",
+  "description": "Free browser-based PDF lecture highlighter with hover summaries",
   "version": "1.0.0",
   "private": true,
   "type": "module",

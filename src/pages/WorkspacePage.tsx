@@ -222,10 +222,10 @@ export default function WorkspacePage() {
       <section className="ws-studio-head">
         <div>
           <p className="ws-kicker">PDF Lecture Workspace</p>
-          <h1>PDF를 올리고 수업을 들으면, 중요한 부분이 바로 표시됩니다.</h1>
+          <h1>무료 모드로 PDF 위에 수업 하이라이트를 남깁니다.</h1>
           <p>
-            브라우저 마이크 전사를 PDF 텍스트와 매칭해 핵심 개념을 노란/초록
-            하이라이트로 정리합니다.
+            유료 API 없이 브라우저 마이크 전사를 PDF 텍스트와 매칭해 핵심
+            개념을 노란/초록 하이라이트로 정리합니다.
           </p>
         </div>
         <div className="ws-live-card" aria-label="현재 작업 상태">
