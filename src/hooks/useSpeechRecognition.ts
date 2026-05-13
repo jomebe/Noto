@@ -8,6 +8,8 @@ export type SttUiState = {
   finalText: string
   error: string | null
   status: string
+  micLevel: number
+  micActive: boolean
 }
 
 function getRecognitionCtor(): (new () => WebSpeechRecognition) | null {
@@ -31,7 +33,12 @@ export function useSpeechRecognition(
   const [finalText, setFinalText] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState('대기 중')
+  const [micLevel, setMicLevel] = useState(0)
+  const [micActive, setMicActive] = useState(false)
   const recRef = useRef<WebSpeechRecognition | null>(null)
+  const micStreamRef = useRef<MediaStream | null>(null)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const analyserFrameRef = useRef<number | null>(null)
   const restartTimerRef = useRef<number | null>(null)
   const shouldListenRef = useRef(false)
   const finalBufferRef = useRef('')
@@ -43,6 +50,72 @@ export function useSpeechRecognition(
     langRef.current = lang
     onFinalChunkRef.current = onFinalChunk
   }, [lang, onFinalChunk])
+
+  const stopMicMonitor = useCallback(() => {
+    if (analyserFrameRef.current !== null) {
+      window.cancelAnimationFrame(analyserFrameRef.current)
+      analyserFrameRef.current = null
+    }
+    micStreamRef.current?.getTracks().forEach((track) => track.stop())
+    micStreamRef.current = null
+    void audioContextRef.current?.close()
+    audioContextRef.current = null
+    setMicLevel(0)
+    setMicActive(false)
+  }, [])
+
+  const startMicMonitor = useCallback(async (): Promise<boolean> => {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError('이 브라우저는 마이크 접근을 지원하지 않습니다.')
+      setStatus('마이크 접근 불가')
+      return false
+    }
+
+    if (micStreamRef.current) return true
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      })
+      const audioContext = new AudioContext()
+      const source = audioContext.createMediaStreamSource(stream)
+      const analyser = audioContext.createAnalyser()
+      analyser.fftSize = 256
+      source.connect(analyser)
+
+      const data = new Uint8Array(analyser.frequencyBinCount)
+      const tick = () => {
+        analyser.getByteTimeDomainData(data)
+        let sum = 0
+        for (const value of data) {
+          const centered = value - 128
+          sum += centered * centered
+        }
+        const rms = Math.sqrt(sum / data.length)
+        setMicLevel(Math.min(1, rms / 32))
+        analyserFrameRef.current = window.requestAnimationFrame(tick)
+      }
+
+      micStreamRef.current = stream
+      audioContextRef.current = audioContext
+      setMicActive(true)
+      tick()
+      return true
+    } catch (err) {
+      const message =
+        err instanceof DOMException && err.name === 'NotAllowedError'
+          ? '마이크 권한이 거부되었습니다. 브라우저 주소창의 마이크 권한을 허용해주세요.'
+          : '마이크를 열지 못했습니다. 입력 장치와 브라우저 권한을 확인해주세요.'
+      setError(message)
+      setStatus('마이크 오류')
+      setMicActive(false)
+      return false
+    }
+  }, [])
 
   const stop = useCallback(() => {
     shouldListenRef.current = false
@@ -60,8 +133,9 @@ export function useSpeechRecognition(
     setListening(false)
     setInterim('')
     setLiveText('')
+    stopMicMonitor()
     setStatus('중지됨')
-  }, [])
+  }, [stopMicMonitor])
 
   const startRecognition = useCallback(() => {
     const Ctor = getRecognitionCtor()
@@ -193,14 +267,35 @@ export function useSpeechRecognition(
     startRecognitionRef.current = startRecognition
   }, [startRecognition])
 
-  const start = useCallback(() => {
+  const start = useCallback(async () => {
     shouldListenRef.current = true
     if (restartTimerRef.current !== null) {
       window.clearTimeout(restartTimerRef.current)
       restartTimerRef.current = null
     }
+    setStatus('마이크 확인 중')
+    const micReady = await startMicMonitor()
+    if (!micReady) {
+      shouldListenRef.current = false
+      return
+    }
     startRecognitionRef.current()
-  }, [])
+  }, [startMicMonitor])
+
+  useEffect(() => {
+    return () => {
+      shouldListenRef.current = false
+      if (restartTimerRef.current !== null) {
+        window.clearTimeout(restartTimerRef.current)
+      }
+      try {
+        recRef.current?.stop()
+      } catch {
+        /* already stopped */
+      }
+      stopMicMonitor()
+    }
+  }, [stopMicMonitor])
 
   const resetTranscript = useCallback(() => {
     finalBufferRef.current = ''
@@ -229,6 +324,8 @@ export function useSpeechRecognition(
     finalText,
     error,
     status,
+    micLevel,
+    micActive,
     start,
     stop,
     resetTranscript,

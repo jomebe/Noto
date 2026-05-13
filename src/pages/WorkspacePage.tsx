@@ -367,7 +367,7 @@ export default function WorkspacePage() {
                     disabled={!doc || speech.listening}
                     onClick={() => {
                       setRecordingSeconds(0)
-                      speech.start()
+                      void speech.start()
                     }}
                   >
                     {workspaceStrings.listenStart}
@@ -392,6 +392,19 @@ export default function WorkspacePage() {
                   >
                     {workspaceStrings.clearTranscript}
                   </button>
+                </div>
+                <div className="ws-mic-meter" aria-label="마이크 입력 레벨">
+                  <div className="ws-mic-meter__head">
+                    <span>마이크 입력</span>
+                    <strong>{speech.micActive ? '연결됨' : '대기'}</strong>
+                  </div>
+                  <div className="ws-mic-meter__track">
+                    <span style={{ width: `${Math.round(speech.micLevel * 100)}%` }} />
+                  </div>
+                  <p>
+                    말할 때 이 막대가 움직이면 마이크는 정상입니다. 막대가
+                    움직이는데 글자가 안 뜨면 브라우저 음성 인식 엔진 문제입니다.
+                  </p>
                 </div>
                 <div className={`ws-wave${speech.listening ? ' ws-wave--active' : ''}`} aria-hidden>
                   <span />
