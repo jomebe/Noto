@@ -50,6 +50,7 @@ type SpeechRecognitionCtor = new () => WebSpeechRecognition
 interface Window {
   SpeechRecognition?: SpeechRecognitionCtor
   webkitSpeechRecognition?: SpeechRecognitionCtor
+  webkitAudioContext?: typeof AudioContext
 }
 
 interface ImportMeta {

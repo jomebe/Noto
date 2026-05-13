@@ -364,7 +364,7 @@ export default function WorkspacePage() {
                   <button
                     type="button"
                     className="noto-btn noto-btn--primary"
-                    disabled={!doc || speech.listening}
+                    disabled={speech.listening}
                     onClick={() => {
                       setRecordingSeconds(0)
                       void speech.start()
@@ -393,6 +393,22 @@ export default function WorkspacePage() {
                     {workspaceStrings.clearTranscript}
                   </button>
                 </div>
+                <label className="ws-device-select">
+                  <span>마이크 선택</span>
+                  <select
+                    value={speech.selectedDeviceId}
+                    disabled={speech.listening}
+                    onChange={(e) => speech.setSelectedDeviceId(e.target.value)}
+                    onFocus={() => void speech.refreshDevices()}
+                  >
+                    <option value="">시스템 기본 마이크</option>
+                    {speech.devices.map((device, index) => (
+                      <option key={device.deviceId} value={device.deviceId}>
+                        {device.label || `마이크 ${index + 1}`}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <div className="ws-mic-meter" aria-label="마이크 입력 레벨">
                   <div className="ws-mic-meter__head">
                     <span>마이크 입력</span>
