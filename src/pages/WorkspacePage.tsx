@@ -7,6 +7,7 @@ import { workspaceStrings } from '../data/workspaceStrings'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition'
 import { clearInsightCache } from '../lib/insight/insightCache'
 import { matchTranscriptChunkToMarks } from '../lib/matchTranscriptToMarks'
+import { normalizeToken } from '../lib/normalizeText'
 import { extractAllTextBoxes } from '../lib/pdf/extractTextBoxes'
 import { loadPdfDocument } from '../lib/pdf/loadPdfDocument'
 import { bulletSummaryLines, topKeywordsFromTranscript } from '../lib/summaryFromTranscript'
@@ -14,6 +15,31 @@ import type { OverlayMark, PdfTextBox } from '../types/noto'
 import './WorkspacePage.css'
 
 const DEFAULT_SCALE = 1.35
+
+function formatDuration(totalSeconds: number): string {
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+}
+
+function findUpdatedBox(mark: OverlayMark, boxes: PdfTextBox[]): PdfTextBox | null {
+  const markText = normalizeToken(mark.matchedText)
+  return (
+    boxes.find(
+      (box) =>
+        box.pageIndex === mark.pageIndex &&
+        normalizeToken(box.text) === markText,
+    ) ??
+    boxes.find((box) => {
+      const boxText = normalizeToken(box.text)
+      return (
+        box.pageIndex === mark.pageIndex &&
+        (boxText.includes(markText) || markText.includes(boxText))
+      )
+    }) ??
+    null
+  )
+}
 
 export default function WorkspacePage() {
   const [pdfName, setPdfName] = useState<string | null>(null)
@@ -26,6 +52,7 @@ export default function WorkspacePage() {
   const [pdfLoading, setPdfLoading] = useState(false)
   const [pdfError, setPdfError] = useState<string | null>(null)
   const [extracting, setExtracting] = useState(false)
+  const [recordingSeconds, setRecordingSeconds] = useState(0)
   const boxesRef = useRef<PdfTextBox[]>([])
 
   useEffect(() => {
@@ -41,6 +68,14 @@ export default function WorkspacePage() {
   }, [])
 
   const speech = useSpeechRecognition('ko-KR', onFinalChunk)
+
+  useEffect(() => {
+    if (!speech.listening) return
+    const id = window.setInterval(() => {
+      setRecordingSeconds((prev) => prev + 1)
+    }, 1000)
+    return () => window.clearInterval(id)
+  }, [speech.listening])
 
   useEffect(() => {
     if (!doc) {
@@ -68,10 +103,39 @@ export default function WorkspacePage() {
     }
   }, [doc, scale])
 
+  useEffect(() => {
+    if (boxes.length === 0 || marks.length === 0) return
+    const frame = window.requestAnimationFrame(() => {
+      setMarks((prev) => {
+        let changed = false
+        const next = prev.map((mark) => {
+          const box = findUpdatedBox(mark, boxes)
+          if (!box) return mark
+          if (
+            Math.abs(mark.left - box.left) < 0.5 &&
+            Math.abs(mark.top - box.top) < 0.5 &&
+            Math.abs(mark.width - box.width) < 0.5 &&
+            Math.abs(mark.height - box.height) < 0.5
+          ) {
+            return mark
+          }
+          changed = true
+          return {
+            ...mark,
+            left: box.left,
+            top: box.top,
+            width: Math.max(box.width, 8),
+            height: Math.max(box.height, 8),
+          }
+        })
+        return changed ? next : prev
+      })
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [boxes, marks.length])
+
   const handleScaleChange = (next: number) => {
     setScale(next)
-    setMarks([])
-    clearInsightCache()
   }
 
   const handleFile = async (file: File | null) => {
@@ -101,19 +165,16 @@ export default function WorkspacePage() {
     }
   }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault()
-    e.currentTarget.style.backgroundColor = 'rgba(99, 102, 241, 0.05)'
   }
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault()
-    e.currentTarget.style.backgroundColor = 'transparent'
   }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault()
-    e.currentTarget.style.backgroundColor = 'transparent'
     const files = e.dataTransfer.files
     if (files.length > 0) {
       void handleFile(files[0])
@@ -125,6 +186,17 @@ export default function WorkspacePage() {
 
   const keywords = topKeywordsFromTranscript(speech.finalText, 10)
   const bullets = bulletSummaryLines(speech.finalText, 4)
+  const importantCount = marks.filter((mark) => mark.kind === 'important').length
+  const explanationCount = marks.filter((mark) => mark.kind === 'explanation').length
+  const statusLabel = !doc
+    ? 'PDF 대기'
+    : extracting
+      ? '텍스트 분석'
+      : speech.listening
+        ? '녹음 중'
+        : marks.length > 0
+          ? '하이라이트 생성'
+          : '준비 완료'
 
   const exportTxt = () => {
     const blob = new Blob([speech.finalText || '(비어 있음)'], {
@@ -146,6 +218,22 @@ export default function WorkspacePage() {
         </Link>
         <span className="ws-nav__title">{workspaceStrings.title}</span>
       </header>
+
+      <section className="ws-studio-head">
+        <div>
+          <p className="ws-kicker">PDF Lecture Workspace</p>
+          <h1>PDF를 올리고 수업을 들으면, 중요한 부분이 바로 표시됩니다.</h1>
+          <p>
+            브라우저 마이크 전사를 PDF 텍스트와 매칭해 핵심 개념을 노란/초록
+            하이라이트로 정리합니다.
+          </p>
+        </div>
+        <div className="ws-live-card" aria-label="현재 작업 상태">
+          <span className={`ws-live-dot${speech.listening ? ' ws-live-dot--on' : ''}`} />
+          <strong>{statusLabel}</strong>
+          <span>{formatDuration(recordingSeconds)}</span>
+        </div>
+      </section>
 
       <div className="ws-layout">
         <section className="ws-main" aria-label="PDF 뷰어">
@@ -180,21 +268,25 @@ export default function WorkspacePage() {
           </div>
 
           {!doc ? (
-            <div
+            <label
               className="ws-placeholder"
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              style={{
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-              }}
             >
-              <p>{workspaceStrings.noPdf}</p>
-              <p style={{ fontSize: '0.85rem', marginTop: '0.5rem', opacity: 0.7 }}>
-                또는 PDF를 여기로 드래그하세요
+              <input
+                type="file"
+                accept="application/pdf"
+                className="ws-upload__input"
+                onChange={(e) => void handleFile(e.target.files?.[0] ?? null)}
+              />
+              <span className="ws-placeholder__icon">PDF</span>
+              <strong>{workspaceStrings.noPdf}</strong>
+              <p>
+                교재 PDF를 선택하거나 이 영역으로 끌어오세요. 업로드 후 바로
+                녹음을 시작할 수 있습니다.
               </p>
-            </div>
+            </label>
           ) : (
             <>
               <div className="ws-pagebar">
@@ -231,6 +323,21 @@ export default function WorkspacePage() {
         </section>
 
         <aside className="ws-side" aria-label="전사 및 요약">
+          <div className="ws-panel ws-panel--stats">
+            <div>
+              <span>중요</span>
+              <strong>{importantCount}</strong>
+            </div>
+            <div>
+              <span>설명</span>
+              <strong>{explanationCount}</strong>
+            </div>
+            <div>
+              <span>PDF 텍스트</span>
+              <strong>{boxes.length}</strong>
+            </div>
+          </div>
+
           <div className="ws-panel">
             <h2 className="ws-panel__title">{workspaceStrings.transcriptHeading}</h2>
             {!speech.supported ? (
@@ -243,7 +350,10 @@ export default function WorkspacePage() {
                     type="button"
                     className="noto-btn noto-btn--primary"
                     disabled={!doc || speech.listening}
-                    onClick={() => speech.start()}
+                    onClick={() => {
+                      setRecordingSeconds(0)
+                      speech.start()
+                    }}
                   >
                     {workspaceStrings.listenStart}
                   </button>
@@ -261,15 +371,23 @@ export default function WorkspacePage() {
                     onClick={() => {
                       speech.resetTranscript()
                       setMarks([])
+                      setRecordingSeconds(0)
                       clearInsightCache()
                     }}
                   >
                     {workspaceStrings.clearTranscript}
                   </button>
                 </div>
+                <div className={`ws-wave${speech.listening ? ' ws-wave--active' : ''}`} aria-hidden>
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                </div>
                 {speech.error ? <p className="ws-error">{speech.error}</p> : null}
                 <div className="ws-transcript">
-                  <p>{speech.finalText}</p>
+                  <p>{speech.finalText || '녹음을 시작하면 전사 내용이 여기에 쌓입니다.'}</p>
                   {speech.interim ? <p className="ws-interim">{speech.interim}</p> : null}
                 </div>
                 <button type="button" className="noto-btn noto-btn--ghost" onClick={exportTxt}>

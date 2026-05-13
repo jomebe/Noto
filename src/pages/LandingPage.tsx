@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import heroImage from '../assets/hero.png'
 import { NotoLogo } from '../components/NotoLogo'
 import { paths } from '../config/paths'
 import { siteContent } from '../data/siteContent'
@@ -17,15 +18,14 @@ export default function LandingPage() {
     if (meta) meta.setAttribute('content', siteContent.meta.description)
   }, [])
 
-  const { nav, hero, concept, features, presentationFlow, footer } =
-    siteContent
+  const { nav, hero, product, features, flow, footer } = siteContent
 
   return (
     <div className="noto">
       <header className="noto-nav">
         <div className="noto-nav__inner">
           <Link to={paths.home} className="noto-nav__brand">
-            <NotoLogo size={40} />
+            <NotoLogo size={38} />
             <span className="noto-nav__brand-text">{nav.brand}</span>
           </Link>
           <nav className="noto-nav__links" aria-label="페이지 섹션">
@@ -48,50 +48,70 @@ export default function LandingPage() {
 
       <main>
         <section className="noto-hero">
-          <div className="noto-hero__glow" aria-hidden />
-          <p className="noto-eyebrow">{hero.eyebrow}</p>
-          <h1 className="noto-hero__title">
-            {hero.titleLetters.map((part, i) => (
-              <span
-                key={i}
-                className={part.accent ? 'noto-hero__title-accent' : undefined}
+          <div className="noto-hero__copy">
+            <p className="noto-eyebrow">{hero.eyebrow}</p>
+            <h1 className="noto-hero__title">{hero.title}</h1>
+            <p className="noto-hero__sub">{hero.sub}</p>
+            <div className="noto-hero__actions">
+              <Link
+                to={paths.workspace}
+                className="noto-btn noto-btn--primary noto-btn--lg"
               >
-                {part.char}
-              </span>
-            ))}
-          </h1>
-          <p className="noto-hero__slogan">
-            {hero.sloganParts.map((part, i) =>
-              part.emphasis ? (
-                <span key={i} className="noto-hero__slogan-em">
-                  {part.text}
-                </span>
-              ) : (
-                <span key={i}>{part.text}</span>
-              ),
-            )}
-          </p>
-          <p className="noto-hero__sub">{hero.sub}</p>
-          <div className="noto-hero__actions">
-            <Link
-              to={paths.workspace}
-              className="noto-btn noto-btn--primary noto-btn--lg"
-            >
-              {hero.primaryCta}
-            </Link>
+                {hero.primaryCta}
+              </Link>
+              <button
+                type="button"
+                className="noto-btn noto-btn--ghost noto-btn--lg"
+                onClick={() => scrollToId(product.id)}
+              >
+                {hero.secondaryCta}
+              </button>
+            </div>
+          </div>
+
+          <div className="noto-product-preview" aria-label="Noto 제품 미리보기">
+            <div className="noto-preview-top">
+              <span />
+              <span />
+              <span />
+              <strong>biology-chapter-03.pdf</strong>
+            </div>
+            <div className="noto-preview-body">
+              <div className="noto-preview-page">
+                <span className="noto-preview-line noto-preview-line--wide" />
+                <span className="noto-preview-line" />
+                <span className="noto-preview-line noto-preview-line--highlight" />
+                <span className="noto-preview-line" />
+                <span className="noto-preview-line noto-preview-line--insight" />
+                <span className="noto-preview-line noto-preview-line--short" />
+              </div>
+              <aside className="noto-preview-side">
+                <div>
+                  <span className="noto-preview-label">LIVE</span>
+                  <strong>녹음 중 12:48</strong>
+                </div>
+                <p>“이 개념은 시험에 자주 나오고, 쉽게 말하면 에너지 저장 방식입니다.”</p>
+                <ul>
+                  <li>중요 하이라이트 8개</li>
+                  <li>호버 요약 5개</li>
+                </ul>
+              </aside>
+            </div>
+            <img src={heroImage} alt="" className="noto-preview-art" />
           </div>
         </section>
 
-        <section id={concept.id} className="noto-section noto-concept">
+        <section id={product.id} className="noto-section noto-product">
           <div className="noto-section__head">
-            <h2>{concept.heading}</h2>
+            <p className="noto-section__kicker">Product</p>
+            <h2>{product.heading}</h2>
+            <p>{product.body}</p>
           </div>
-          <blockquote className="noto-concept__quote">{concept.quote}</blockquote>
-          <p className="noto-concept__body">{concept.body}</p>
         </section>
 
         <section id={features.id} className="noto-section noto-features">
           <div className="noto-section__head">
+            <p className="noto-section__kicker">Features</p>
             <h2>{features.heading}</h2>
           </div>
           <ul className="noto-feature-grid">
@@ -105,22 +125,16 @@ export default function LandingPage() {
           </ul>
         </section>
 
-        <section id={presentationFlow.id} className="noto-section noto-flow">
+        <section id={flow.id} className="noto-section noto-flow">
           <div className="noto-section__head">
-            <h2>{presentationFlow.heading}</h2>
+            <p className="noto-section__kicker">Flow</p>
+            <h2>{flow.heading}</h2>
           </div>
           <div className="noto-flow__grid">
-            {presentationFlow.phases.map((phase) => (
-              <article
-                key={phase.title}
-                className={`noto-flow-card${phase.accent ? ' noto-flow-card--accent' : ''}`}
-              >
-                <h3>{phase.title}</h3>
-                <ol>
-                  {phase.steps.map((step, i) => (
-                    <li key={i}>{step}</li>
-                  ))}
-                </ol>
+            {flow.steps.map((step) => (
+              <article key={step.title} className="noto-flow-card">
+                <h3>{step.title}</h3>
+                <p>{step.desc}</p>
               </article>
             ))}
           </div>

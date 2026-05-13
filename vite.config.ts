@@ -30,8 +30,4 @@ export default defineConfig({
   preview: {
     port: 4173,
   },
-  define: {
-    'import.meta.env.VITE_OPENAI_API_KEY': JSON.stringify(process.env.VITE_OPENAI_API_KEY || ''),
-    'import.meta.env.VITE_OPENAI_MODEL': JSON.stringify(process.env.VITE_OPENAI_MODEL || 'gpt-4o-mini'),
-  },
 })

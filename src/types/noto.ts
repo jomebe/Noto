@@ -1,4 +1,4 @@
-export type MarkKind = 'link' | 'star'
+export type MarkKind = 'important' | 'explanation'
 
 export type PdfTextBox = {
   pageIndex: number
@@ -19,5 +19,7 @@ export type OverlayMark = {
   kind: MarkKind
   matchedText: string
   transcriptSnippet: string
+  confidence: number
+  reason: string
   insight?: string
 }

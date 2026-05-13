@@ -1,111 +1,91 @@
-﻿export const siteContent = {
+export const siteContent = {
   meta: {
-    title: 'noto — AI Layered Note',
+    title: 'Noto — 수업 음성을 PDF 위의 필기로 바꾸는 AI 노트',
     description:
-      '교재는 깨끗하게, 지식은 두껍게. 호버 기반 지능형 학습과 발표 지원을 한곳에서.',
+      'PDF를 업로드하고 수업 음성을 받으면, AI가 중요한 부분을 하이라이트하고 호버 요약을 제공합니다.',
   },
   nav: {
-    brand: 'noto',
+    brand: 'Noto',
     links: [
-      { id: 'concept', label: '컨셉' },
+      { id: 'product', label: '제품' },
       { id: 'features', label: '기능' },
-      { id: 'flow', label: '사용 흐름' },
+      { id: 'flow', label: '흐름' },
     ],
-    cta: '시작하기',
+    cta: 'PDF로 시작',
   },
   hero: {
-    eyebrow: 'AI Layered Note',
-    titleLetters: [
-      { char: 'n', accent: false },
-      { char: 'o', accent: false },
-      { char: 't', accent: false },
-      { char: 'o', accent: true },
-    ],
-    sloganParts: [
-      { text: '필기 없이, ', emphasis: false },
-      { text: 'AI', emphasis: true },
-      { text: '가 완성하는 완벽한 학습', emphasis: false },
-    ],
+    eyebrow: 'AI Lecture Notes on Your PDF',
+    title: '수업이 끝나면 PDF 위에 필기가 완성됩니다',
     sub:
-      'PDF 위에 직접 덧대지 않고, AI 마크와 호버 인사이트로 가독성과 깊이를 동시에 잡는 학습·발표 경험.',
-    primaryCta: '제품 살펴보기',
+      '교재를 새 노트로 복사하지 않습니다. 수업 음성을 PDF 텍스트와 매칭해 중요한 개념은 하이라이트하고, 설명은 호버 요약으로 남깁니다.',
+    primaryCta: '워크스페이스 열기',
+    secondaryCta: '작동 방식 보기',
   },
-  concept: {
-    id: 'concept',
-    heading: '핵심 컨셉',
-    quote: '교재는 깨끗하게, 지식은 두껍게',
+  product: {
+    id: 'product',
+    heading: '업로드, 녹음, 자동 하이라이트',
     body:
-      '강의와 발표에 몰입하도록 설계했습니다. 중요한 순간은 AI가 마킹하고, 여백의 설명은 마우스 한 번으로 펼쳐집니다.',
+      'Noto는 브라우저 안에서 PDF를 읽고 수업 전사를 분석합니다. 강조 표현과 반복 언급은 노란색, 보충 설명이 붙은 개념은 초록색으로 구분합니다.',
   },
   features: {
     id: 'features',
-    heading: '핵심 기능',
+    heading: 'MVP에 필요한 핵심만 넣었습니다',
     items: [
       {
-        title: 'AI 오디오 매핑',
-        desc: 'STT로 강의 음성을 실시간 분석해 PDF의 관련 문단과 자동 연결합니다.',
-        tag: 'STT',
+        title: 'PDF 업로드와 텍스트 좌표 추출',
+        desc: 'PDF.js로 페이지를 렌더링하고 텍스트 위치 위에 하이라이트 레이어를 정확히 얹습니다.',
+        tag: 'PDF',
       },
       {
-        title: 'AI 인텔리전트 마킹',
-        desc: '강조 톤·반복으로 하이라이트, “중요·시험” 키워드로 별표 마크를 자동 배치합니다.',
-        tag: 'Mark',
+        title: '브라우저 마이크 전사',
+        desc: 'Chrome/Edge의 Web Speech API로 수업 음성을 받아 PDF 문구와 실시간으로 연결합니다.',
+        tag: 'Voice',
       },
       {
-        title: 'Hover Insight',
-        desc: '교재 밖 보충 설명은 AI 마크로 표시하고, 호버 시 요약 팝업으로 빠르게 복습합니다.',
-        tag: 'Hover',
+        title: '중요도 기반 하이라이트',
+        desc: '시험, 중요, 반드시 같은 강조 표현과 반복 언급을 기준으로 자동 하이라이트를 생성합니다.',
+        tag: 'Highlight',
       },
       {
-        title: '자동 요약 섹션',
-        desc: '강의 종료 후 마지막 장에 키워드·요약 리포트를 자동 생성합니다.',
-        tag: 'Summary',
+        title: '호버 요약',
+        desc: '하이라이트에 마우스를 올리면 해당 PDF 문구와 전사 맥락을 바탕으로 짧은 요약을 보여줍니다.',
+        tag: 'AI',
       },
     ],
   },
-  presentationFlow: {
+  flow: {
     id: 'flow',
-    heading: '발표·학습 흐름',
-    phases: [
+    heading: '수업 전 30초 세팅',
+    steps: [
       {
-        title: '발표 전',
-        accent: true,
-        steps: [
-          '자료 업로드 · PPT 피드백',
-          '슬라이드별 스크립트 생성·수정',
-          '예상 질문 · 핵심 키워드',
-          '선택: 음성/아바타 스타일, FAQ·참고자료',
-        ],
+        title: '1. PDF 업로드',
+        desc: '교재나 강의자료 PDF를 올리면 페이지와 텍스트 위치를 분석합니다.',
       },
       {
-        title: '발표 중',
-        accent: false,
-        steps: [
-          '실시간 피드백·스크립트·키워드 정리',
-          '선택: AI 발표 시작, 슬라이드 동기 설명·아바타',
-          '질문 수집(음성·텍스트) → 분석·자료 탐색·답변·TTS',
-          '관련 슬라이드·시각 자료와 함께 응답',
-        ],
+        title: '2. 녹음 시작',
+        desc: '마이크 권한을 허용하고 수업을 들으면 전사가 쌓입니다.',
       },
       {
-        title: '발표 후',
-        accent: false,
-        steps: [
-          '질문 목록 저장 · 빈도 분석',
-          '개선 포인트 추천 · 리포트·FAQ',
-          '연습 모드에서 AI 피드백',
-        ],
+        title: '3. 하이라이트 확인',
+        desc: '중요 개념과 보충 설명을 PDF 위에서 바로 확인합니다.',
       },
     ],
   },
   footer: {
-    line: 'noto — AI Layered Note',
-    note: '브랜드와 UI는 제품 톤에 맞춰 지속적으로 다듬어집니다.',
+    line: 'Noto — AI Lecture Notes on PDF',
+    note: '현재 MVP는 텍스트 추출 가능한 PDF와 Chrome/Edge 브라우저에 최적화되어 있습니다.',
   },
 } as const
 
 export type SiteContent = typeof siteContent
-export type HoverDemoSection = { id: string; heading: string; hint: string; docTitle: string; paragraphs: HoverDemoParagraph[] }
-export type HoverDemoParagraph = { text: string; mark: { label: string; insight: string } | null }
-
-
+export type HoverDemoSection = {
+  id: string
+  heading: string
+  hint: string
+  docTitle: string
+  paragraphs: HoverDemoParagraph[]
+}
+export type HoverDemoParagraph = {
+  text: string
+  mark: { label: string; insight: string } | null
+}

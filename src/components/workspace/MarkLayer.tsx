@@ -26,6 +26,7 @@ export function MarkLayer({ marks }: MarkLayerProps) {
     async (el: HTMLElement, mark: OverlayMark) => {
       const rect = el.getBoundingClientRect()
       const pad = 12
+      const tooltipWidth = Math.min(360, window.innerWidth - pad * 2)
       let x = rect.left + rect.width / 2
       const estimatedH = 160
       let placement: 'below' | 'above' = 'below'
@@ -34,8 +35,10 @@ export function MarkLayer({ marks }: MarkLayerProps) {
         placement = 'above'
         y = rect.top - pad
       }
-      if (x < pad) x = pad
-      if (x > window.innerWidth - pad) x = window.innerWidth - pad
+      const minX = pad + tooltipWidth / 2
+      const maxX = window.innerWidth - pad - tooltipWidth / 2
+      if (x < minX) x = minX
+      if (x > maxX) x = maxX
 
       const cached = getCachedInsight(mark.id)
       if (cached) {
@@ -77,14 +80,12 @@ export function MarkLayer({ marks }: MarkLayerProps) {
               width: m.width,
               height: m.height,
             }}
-            aria-label={m.kind === 'star' ? '중요 마크' : '연결 마크'}
+            aria-label={m.kind === 'important' ? '중요 하이라이트' : '보충 설명 하이라이트'}
             onMouseEnter={(e) => void openForMark(e.currentTarget, m)}
             onMouseLeave={close}
             onFocus={(e) => void openForMark(e.currentTarget, m)}
             onBlur={close}
-          >
-            {m.kind === 'star' ? '★' : ''}
-          </button>
+          />
         ))}
       </div>
 
@@ -95,7 +96,14 @@ export function MarkLayer({ marks }: MarkLayerProps) {
           className={`pdf-insight pdf-insight--${pop.placement}`}
           style={{ left: pop.x, top: pop.y }}
         >
+          <span className={`pdf-insight__label pdf-insight__label--${pop.mark.kind}`}>
+            {pop.mark.kind === 'important' ? '중요 하이라이트' : '보충 설명'}
+          </span>
+          <strong className="pdf-insight__term">{pop.mark.matchedText}</strong>
           <p className="pdf-insight__body">{pop.text}</p>
+          <p className="pdf-insight__meta">
+            신뢰도 {Math.round(pop.mark.confidence * 100)}% · {pop.mark.reason}
+          </p>
         </div>
       ) : null}
     </>

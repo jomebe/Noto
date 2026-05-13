@@ -2,11 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "env": {
-    "VITE_OPENAI_API_KEY": {
-      "description": "OpenAI API Key for AI-powered insights",
+    "OPENAI_API_KEY": {
+      "description": "Server-side OpenAI API key for hover insights",
       "required": false
     },
-    "VITE_OPENAI_MODEL": {
+    "OPENAI_MODEL": {
       "description": "OpenAI model to use for generating insights",
       "required": false,
       "default": "gpt-4o-mini"
@@ -14,7 +14,7 @@
   },
   "rewrites": [
     {
-      "source": "/",
+      "source": "/((?!api/.*).*)",
       "destination": "/index.html"
     }
   ],

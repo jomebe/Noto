@@ -13,12 +13,7 @@ body {
   min-height: 100svh;
   font-family: var(--noto-font);
   color: var(--noto-ink);
-  background: radial-gradient(
-      120% 80% at 50% -20%,
-      var(--noto-lavender) 0%,
-      var(--noto-surface) 55%
-    ),
-    var(--noto-surface);
+  background: var(--noto-app-bg);
   -webkit-font-smoothing: antialiased;
 }
 
