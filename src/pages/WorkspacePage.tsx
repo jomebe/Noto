@@ -69,6 +69,18 @@ export default function WorkspacePage() {
 
   const speech = useSpeechRecognition('ko-KR', onFinalChunk)
 
+  const handleManualTranscript = useCallback(
+    (value: string) => {
+      speech.stop()
+      speech.replaceTranscript(value)
+      setMarks((prev) => {
+        const next = matchTranscriptChunkToMarks(value, boxesRef.current, prev)
+        return next.length === 0 ? prev : [...prev, ...next]
+      })
+    },
+    [speech],
+  )
+
   useEffect(() => {
     if (!speech.listening) return
     const id = window.setInterval(() => {
@@ -385,11 +397,21 @@ export default function WorkspacePage() {
                   <span />
                   <span />
                 </div>
+                <p className="ws-stt-status">상태: {speech.status}</p>
                 {speech.error ? <p className="ws-error">{speech.error}</p> : null}
                 <div className="ws-transcript">
                   <p>{speech.finalText || '녹음을 시작하면 전사 내용이 여기에 쌓입니다.'}</p>
                   {speech.interim ? <p className="ws-interim">{speech.interim}</p> : null}
                 </div>
+                <label className="ws-manual">
+                  <span>전사가 안 뜨면 여기에 직접 입력해서 하이라이트 테스트</span>
+                  <textarea
+                    value={speech.finalText}
+                    rows={4}
+                    placeholder="예: 이 부분 중요합니다. 시험에 나와요. 세포 호흡은 쉽게 말하면 에너지를 만드는 과정입니다."
+                    onChange={(e) => handleManualTranscript(e.target.value)}
+                  />
+                </label>
                 <button type="button" className="noto-btn noto-btn--ghost" onClick={exportTxt}>
                   {workspaceStrings.exportTranscript}
                 </button>

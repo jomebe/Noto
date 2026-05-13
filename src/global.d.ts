@@ -30,11 +30,19 @@ interface WebSpeechRecognition extends EventTarget {
   maxAlternatives: number
   start(): void
   stop(): void
+  onaudiostart: ((this: WebSpeechRecognition, ev: Event) => void) | null
+  onaudioend: ((this: WebSpeechRecognition, ev: Event) => void) | null
+  onsoundstart: ((this: WebSpeechRecognition, ev: Event) => void) | null
+  onsoundend: ((this: WebSpeechRecognition, ev: Event) => void) | null
+  onspeechstart: ((this: WebSpeechRecognition, ev: Event) => void) | null
+  onspeechend: ((this: WebSpeechRecognition, ev: Event) => void) | null
+  onstart: ((this: WebSpeechRecognition, ev: Event) => void) | null
   onresult: ((this: WebSpeechRecognition, ev: SpeechRecognitionEvent) => void) | null
   onerror:
     | ((this: WebSpeechRecognition, ev: SpeechRecognitionErrorEvent) => void)
     | null
   onend: ((this: WebSpeechRecognition, ev: Event) => void) | null
+  onnomatch: ((this: WebSpeechRecognition, ev: Event) => void) | null
 }
 
 type SpeechRecognitionCtor = new () => WebSpeechRecognition
@@ -42,11 +50,6 @@ type SpeechRecognitionCtor = new () => WebSpeechRecognition
 interface Window {
   SpeechRecognition?: SpeechRecognitionCtor
   webkitSpeechRecognition?: SpeechRecognitionCtor
-}
-
-interface ImportMetaEnv {
-  readonly VITE_OPENAI_API_KEY?: string
-  readonly VITE_OPENAI_MODEL?: string
 }
 
 interface ImportMeta {

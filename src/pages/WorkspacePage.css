@@ -379,6 +379,16 @@
   margin-bottom: 0.7rem;
 }
 
+.ws-stt-status {
+  margin: -0.2rem 0 0.65rem;
+  padding: 0.42rem 0.55rem;
+  border-radius: var(--noto-radius-sm);
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 .ws-transcript p {
   margin: 0;
 }
@@ -387,6 +397,37 @@
   margin-top: 0.35rem !important;
   color: var(--noto-accent);
   font-style: italic;
+}
+
+.ws-manual {
+  display: grid;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+}
+
+.ws-manual span {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--noto-ink-muted);
+}
+
+.ws-manual textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 6.2rem;
+  border: 1px solid var(--noto-border);
+  border-radius: var(--noto-radius-sm);
+  padding: 0.65rem 0.75rem;
+  color: var(--noto-ink);
+  background: #fff;
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.ws-manual textarea:focus {
+  outline: 2px solid color-mix(in srgb, var(--noto-accent) 28%, transparent);
+  border-color: var(--noto-accent);
 }
 
 .ws-keywords {
