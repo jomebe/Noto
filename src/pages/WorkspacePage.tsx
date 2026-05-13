@@ -367,7 +367,7 @@ export default function WorkspacePage() {
                     disabled={speech.listening}
                     onClick={() => {
                       setRecordingSeconds(0)
-                      void speech.start()
+                      speech.start()
                     }}
                   >
                     {workspaceStrings.listenStart}
@@ -393,35 +393,10 @@ export default function WorkspacePage() {
                     {workspaceStrings.clearTranscript}
                   </button>
                 </div>
-                <label className="ws-device-select">
-                  <span>마이크 선택</span>
-                  <select
-                    value={speech.selectedDeviceId}
-                    disabled={speech.listening}
-                    onChange={(e) => speech.setSelectedDeviceId(e.target.value)}
-                    onFocus={() => void speech.refreshDevices()}
-                  >
-                    <option value="">시스템 기본 마이크</option>
-                    {speech.devices.map((device, index) => (
-                      <option key={device.deviceId} value={device.deviceId}>
-                        {device.label || `마이크 ${index + 1}`}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <div className="ws-mic-meter" aria-label="마이크 입력 레벨">
-                  <div className="ws-mic-meter__head">
-                    <span>마이크 입력</span>
-                    <strong>{speech.micActive ? '연결됨' : '대기'}</strong>
-                  </div>
-                  <div className="ws-mic-meter__track">
-                    <span style={{ width: `${Math.round(speech.micLevel * 100)}%` }} />
-                  </div>
-                  <p>
-                    말할 때 이 막대가 움직이면 마이크는 정상입니다. 막대가
-                    움직이는데 글자가 안 뜨면 브라우저 음성 인식 엔진 문제입니다.
-                  </p>
-                </div>
+                <p className="ws-stt-note">
+                  이 기능은 브라우저의 기본 마이크와 Web Speech API를 사용합니다.
+                  Chrome/Edge에서 주소창의 마이크 권한을 허용해야 전사가 표시됩니다.
+                </p>
                 <div className={`ws-wave${speech.listening ? ' ws-wave--active' : ''}`} aria-hidden>
                   <span />
                   <span />
