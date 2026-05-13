@@ -4,6 +4,7 @@ export type SttUiState = {
   supported: boolean
   listening: boolean
   interim: string
+  liveText: string
   finalText: string
   error: string | null
   status: string
@@ -26,6 +27,7 @@ export function useSpeechRecognition(
   const [supported] = useState(() => getRecognitionCtor() !== null)
   const [listening, setListening] = useState(false)
   const [interim, setInterim] = useState('')
+  const [liveText, setLiveText] = useState('')
   const [finalText, setFinalText] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState('대기 중')
@@ -57,6 +59,7 @@ export function useSpeechRecognition(
     }
     setListening(false)
     setInterim('')
+    setLiveText('')
     setStatus('중지됨')
   }, [])
 
@@ -121,6 +124,7 @@ export function useSpeechRecognition(
         if (trimmed) {
           finalBufferRef.current = `${finalBufferRef.current} ${trimmed}`.trim()
           setFinalText(finalBufferRef.current)
+          setLiveText(trimmed)
           onFinalChunkRef.current(trimmed)
         }
       }
@@ -132,7 +136,9 @@ export function useSpeechRecognition(
           interimLine += res[0]?.transcript ?? ''
         }
       }
-      setInterim(interimLine.trim())
+      const live = interimLine.trim()
+      setInterim(live)
+      if (live) setLiveText(live)
     }
 
     rec.onerror = (ev: SpeechRecognitionErrorEvent) => {
@@ -200,6 +206,7 @@ export function useSpeechRecognition(
     finalBufferRef.current = ''
     setFinalText('')
     setInterim('')
+    setLiveText('')
     setError(null)
     setStatus('대기 중')
   }, [])
@@ -209,6 +216,7 @@ export function useSpeechRecognition(
     finalBufferRef.current = next
     setFinalText(next)
     setInterim('')
+    setLiveText(next)
     setError(null)
     setStatus(next ? '수동 전사 입력됨' : '대기 중')
   }, [])
@@ -217,6 +225,7 @@ export function useSpeechRecognition(
     supported,
     listening,
     interim,
+    liveText,
     finalText,
     error,
     status,

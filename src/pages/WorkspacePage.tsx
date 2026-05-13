@@ -198,6 +198,9 @@ export default function WorkspacePage() {
 
   const keywords = topKeywordsFromTranscript(speech.finalText, 10)
   const bullets = bulletSummaryLines(speech.finalText, 4)
+  const transcriptPreview = [speech.finalText, speech.interim]
+    .filter(Boolean)
+    .join(' ')
   const importantCount = marks.filter((mark) => mark.kind === 'important').length
   const explanationCount = marks.filter((mark) => mark.kind === 'explanation').length
   const statusLabel = !doc
@@ -399,8 +402,17 @@ export default function WorkspacePage() {
                 </div>
                 <p className="ws-stt-status">상태: {speech.status}</p>
                 {speech.error ? <p className="ws-error">{speech.error}</p> : null}
+                <div className="ws-live-transcript" aria-live="polite">
+                  <span>실시간 인식</span>
+                  <p>
+                    {speech.liveText ||
+                      (speech.listening
+                        ? '말하면 여기에 즉시 표시됩니다.'
+                        : '녹음을 시작하면 현재 인식 중인 말이 여기에 뜹니다.')}
+                  </p>
+                </div>
                 <div className="ws-transcript">
-                  <p>{speech.finalText || '녹음을 시작하면 전사 내용이 여기에 쌓입니다.'}</p>
+                  <p>{transcriptPreview || '녹음을 시작하면 전사 내용이 여기에 쌓입니다.'}</p>
                   {speech.interim ? <p className="ws-interim">{speech.interim}</p> : null}
                 </div>
                 <label className="ws-manual">

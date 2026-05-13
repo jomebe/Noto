@@ -379,6 +379,30 @@
   margin-bottom: 0.7rem;
 }
 
+.ws-live-transcript {
+  margin-bottom: 0.7rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--noto-accent) 28%, var(--noto-border));
+  border-radius: var(--noto-radius-sm);
+  background: #ecfeff;
+}
+
+.ws-live-transcript span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #155e75;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.ws-live-transcript p {
+  min-height: 1.4rem;
+  margin: 0;
+  color: #0f172a;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 .ws-stt-status {
   margin: -0.2rem 0 0.65rem;
   padding: 0.42rem 0.55rem;
